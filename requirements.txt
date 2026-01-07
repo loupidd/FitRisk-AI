@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+scikit-learn
+pandas
+numpy
+seaborn
+matplotlib
+kagglehub[pandas-datasets]
+joblib
