@@ -1,44 +1,106 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import joblib
-import numpy as np
 import json
-import os
+import numpy as np
+from fastapi.middleware.cors import CORSMiddleware
 
 
-app = FastAPI()
+app = FastAPI(
+    title="FitRisk-AI",
+    description="Diabetes Risk Prediction API using KNN (CDC BRFSS 2015)",
+    version="0.1.0"
+)
 
-# load model & scaler
-model = joblib.load("../ml/model_knn.pkl")
-scaler = joblib.load("../ml/scaler.pkl")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# load feature order
-with open("../ml/features.json") as f:
-    FEATURES = json.load(f)
+# ===== Load artifacts =====
+try:
+    model = joblib.load("model_knn.pkl")
+    scaler = joblib.load("scaler.pkl")
 
-# ---------- INPUT SCHEMA ----------
+    with open("features.json", "r") as f:
+        FEATURES = json.load(f)
+
+except Exception as e:
+    raise RuntimeError(f"Failed to load model artifacts: {e}")
+
+# ===== Schemas =====
 class PatientInput(BaseModel):
-    data: dict  # flexible, we validate manually
+    data: dict
 
 
-# ---------- PREDICT ----------
-@app.post("/predict")
-def predict(input: PatientInput):
+class PredictionResponse(BaseModel):
+    prediction: int
+    risk: str
+    probability: float
+    bmi: float
+    bmi_category: str
 
-    X = []
-    for feature in FEATURES:
-        if feature not in input.data:
-            return {
-                "error": f"Missing feature: {feature}"
-            }
-        X.append(input.data[feature])
 
-    X = np.array(X).reshape(1, -1)
+# ===== BMI CATEGORY (WHO) =====
+def bmi_category(bmi: float) -> str:
+    if bmi < 18.5:
+        return "Underweight"
+    elif bmi < 25:
+        return "Normal"
+    elif bmi < 30:
+        return "Overweight"
+    else:
+        return "Obese"
 
-    X_scaled = scaler.transform(X)
-    prediction = model.predict(X_scaled)[0]
 
+# ===== Health Check =====
+@app.get("/")
+def health_check():
     return {
-        "prediction": int(prediction),
-        "risk": "Diabetes" if prediction == 1 else "No Diabetes"
+        "status": "ok",
+        "model": "KNN Diabetes Classifier",
+        "features": len(FEATURES)
     }
+
+
+# ===== Prediction Endpoint =====
+@app.post("/predict", response_model=PredictionResponse)
+def predict(input_data: PatientInput):
+    try:
+        missing = [f for f in FEATURES if f not in input_data.data]
+        if missing:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Missing features: {missing}"
+            )
+
+        # Arrange input in correct order
+        X = np.array([[input_data.data[f] for f in FEATURES]])
+
+        # Scale
+        X_scaled = scaler.transform(X)
+
+        # Predict
+        prediction = int(model.predict(X_scaled)[0])
+        proba = float(model.predict_proba(X_scaled)[0][1])
+
+        bmi_value = float(input_data.data["BMI"])
+        bmi_cat = bmi_category(bmi_value)
+
+        risk_label = "Diabetes Risk" if prediction == 1 else "No Diabetes"
+
+        return {
+            "prediction": prediction,
+            "risk": risk_label,
+            "probability": round(proba, 4),
+            "bmi": round(bmi_value, 2),
+            "bmi_category": bmi_cat
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
