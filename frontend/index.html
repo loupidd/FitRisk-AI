@@ -2,182 +2,151 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>FitRisk-AI | Diabetes Risk Prediction</title>
+    <title>FitRisk-AI</title>
 
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: #f3f4f6;
-        padding: 40px;
-      }
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-      .container {
-        max-width: 650px;
-        background: white;
-        padding: 30px;
-        margin: auto;
-        border-radius: 10px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-      }
-
-      h1 {
-        text-align: center;
-        margin-bottom: 10px;
-      }
-
-      p.subtitle {
-        text-align: center;
-        color: #555;
-        font-size: 14px;
-        margin-bottom: 25px;
-      }
-
-      label {
-        display: block;
-        margin-top: 14px;
-        font-weight: bold;
-      }
-
-      small {
-        display: block;
-        color: #666;
-        margin-bottom: 4px;
-      }
-
-      input,
-      select {
-        width: 100%;
-        padding: 8px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-      }
-
-      button {
-        margin-top: 25px;
-        width: 100%;
-        padding: 12px;
-        background: #2563eb;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-
-      button:hover {
-        background: #1e40af;
-      }
-
-      .result {
-        margin-top: 25px;
-        padding: 18px;
-        border-radius: 8px;
-        display: none;
-        font-weight: bold;
-      }
-
-      .low {
-        background: #dcfce7;
-        color: #166534;
-      }
-
-      .high {
-        background: #fee2e2;
-        color: #991b1b;
-      }
-    </style>
+    <!-- Vue 3 CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
-  <body>
-    <div class="container">
-      <h1>FitRisk-AI</h1>
-      <p class="subtitle">
-        Diabetes risk prediction using CDC BRFSS 2015 dataset and KNN Machine
-        Learning model
+
+  <body class="bg-gray-100 py-10">
+    <div id="app" class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+      <h1 class="text-3xl font-bold text-center mb-2">FitRisk-AI</h1>
+      <p class="text-center text-gray-500 text-sm mb-6">
+        Diabetes risk prediction using CDC BRFSS 2015 + ML
       </p>
 
-      <form id="riskForm">
-        <label>Height (cm)</label>
-        <small>Your body height in centimeters</small>
-        <input type="number" id="height" placeholder="e.g. 170" required />
-
-        <label>Weight (kg)</label>
-        <small>Your body weight in kilograms</small>
-        <input type="number" id="weight" placeholder="e.g. 65" required />
-
-        <label>Age Range</label>
-        <small>Select your current age range</small>
-        <select id="Age">
-          <option value="1">18–24 years</option>
-          <option value="2">25–29 years</option>
-          <option value="3">30–34 years</option>
-          <option value="4">35–39 years</option>
-          <option value="5">40–44 years</option>
-          <option value="6">45–49 years</option>
-          <option value="7">50–54 years</option>
-          <option value="8">55–59 years</option>
-          <option value="9">60–64 years</option>
-          <option value="10">65–69 years</option>
-          <option value="11">70–74 years</option>
-          <option value="12">75–79 years</option>
-          <option value="13">80 years and above</option>
-        </select>
-
-        <label>Annual Income (Approximate)</label>
-        <small>Converted to Indonesian Rupiah (IDR)</small>
-        <select id="Income">
-          <option value="1">Below Rp155,000,000</option>
-          <option value="2">Rp155,000,000 – Rp232,500,000</option>
-          <option value="3">Rp232,500,000 – Rp310,000,000</option>
-          <option value="4">Rp310,000,000 – Rp387,500,000</option>
-          <option value="5">Rp387,500,000 – Rp542,500,000</option>
-          <option value="6">Rp542,500,000 – Rp775,000,000</option>
-          <option value="7">Rp775,000,000 – Rp1,162,500,000</option>
-          <option value="8">Above Rp1,162,500,000</option>
-        </select>
-
-        <label>High Blood Pressure</label>
-        <small>Have you ever been told you have high blood pressure?</small>
-        <select id="HighBP">
-          <option value="0">No</option>
-          <option value="1">Yes</option>
-        </select>
-
-        <label>High Cholesterol</label>
-        <small>Have you ever been told you have high cholesterol?</small>
-        <select id="HighChol">
-          <option value="0">No</option>
-          <option value="1">Yes</option>
-        </select>
-
-        <label>Smoking Status</label>
-        <small>Have you smoked at least 100 cigarettes in your lifetime?</small>
-        <select id="Smoker">
-          <option value="0">No</option>
-          <option value="1">Yes</option>
-        </select>
-
-        <label>Physical Activity</label>
-        <small>Any physical activity in the last 30 days?</small>
-        <select id="PhysActivity">
-          <option value="0">No</option>
-          <option value="1">Yes</option>
-        </select>
-
-        <button type="submit">Predict Diabetes Risk</button>
-        <div id="loading" style="display: none; margin-top: 15px; color: #555">
-          Analyzing health data & preparing exercise plan...
+      <!-- FORM -->
+      <form @submit.prevent="submitForm" class="space-y-4">
+        <div>
+          <label class="font-semibold">Height (cm)</label>
+          <input
+            v-model.number="form.height"
+            type="number"
+            class="input"
+            required
+          />
         </div>
+
+        <div>
+          <label class="font-semibold">Weight (kg)</label>
+          <input
+            v-model.number="form.weight"
+            type="number"
+            class="input"
+            required
+          />
+        </div>
+
+        <div>
+          <label class="font-semibold">Age Range</label>
+          <select v-model.number="form.Age" class="input">
+            <option v-for="(label, val) in ageOptions" :value="val">
+              {{ label }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="font-semibold">Annual Income</label>
+          <select v-model.number="form.Income" class="input">
+            <option v-for="(label, val) in incomeOptions" :value="val">
+              {{ label }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="font-semibold">High Blood Pressure</label>
+          <select v-model.number="form.HighBP" class="input">
+            <option :value="0">No</option>
+            <option :value="1">Yes</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="font-semibold">High Cholesterol</label>
+          <select v-model.number="form.HighChol" class="input">
+            <option :value="0">No</option>
+            <option :value="1">Yes</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="font-semibold">Smoking Status</label>
+          <select v-model.number="form.Smoker" class="input">
+            <option :value="0">No</option>
+            <option :value="1">Yes</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="font-semibold">Physical Activity</label>
+          <select v-model.number="form.PhysActivity" class="input">
+            <option :value="0">No</option>
+            <option :value="1">Yes</option>
+          </select>
+        </div>
+
+        <button
+          class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+        >
+          Predict Diabetes Risk
+        </button>
+
+        <p v-if="loading" class="text-sm text-gray-500 text-center">
+          Analyzing health data & preparing exercise plan...
+        </p>
       </form>
 
-      <div id="result" class="result"></div>
-      <div id="bmi-info" style="margin-top: 15px; display: none">
-        <strong>BMI Information</strong><br />
-        <span id="bmi-value"></span><br />
-        <span id="bmi-category"></span><br />
-        <small id="bmi-description" style="color: #555"></small>
+      <!-- RESULT -->
+      <div
+        v-if="result"
+        class="mt-6 p-5 rounded-lg"
+        :class="result.prediction === 1 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'"
+      >
+        <h3 class="text-xl font-bold">
+          {{ result.prediction === 1 ? "High" : "Low" }} Diabetes Risk
+        </h3>
+
+        <p class="mt-2">
+          Estimated Probability: {{ (result.probability * 100).toFixed(2) }}%
+        </p>
+
+        <hr class="my-3" />
+
+        <p class="font-semibold">BMI</p>
+        <p>{{ result.bmi }} ({{ result.bmi_category }})</p>
+        <p class="text-sm">{{ result.bmi_description }}</p>
+
+        <hr class="my-3" />
+
+        <p class="font-semibold mb-2">Recommended Exercises</p>
+
+        <div v-if="result.exercises?.length">
+          <div
+            v-for="ex in result.exercises.slice(0,5)"
+            class="mb-3 p-3 border-l-4 border-blue-600 bg-white rounded"
+          >
+            <b>{{ ex.name }}</b><br />
+            Target: {{ ex.target }}<br />
+            Equipment: {{ ex.equipment }}
+          </div>
+        </div>
+
+        <i v-else>No exercise recommendations available.</i>
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="app.js"></script>
+
+    <!-- Tailwind input shortcut -->
+    <style>
+      .input {
+        @apply w-full p-2 border rounded-lg;
+      }
+    </style>
   </body>
 </html>
