@@ -33,36 +33,51 @@ document
       Income: Number(document.getElementById("Income").value),
     };
 
+    const loading = document.getElementById("loading");
+    loading.style.display = "block";
+
     const response = await fetch("http://127.0.0.1:8000/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ data }),
     });
 
+    loading.style.display = "none";
+
     const result = await response.json();
 
     const resultBox = document.getElementById("result");
-    const bmiInfo = document.getElementById("bmi-info");
-    const bmiValue = document.getElementById("bmi-value");
-    const bmiCategory = document.getElementById("bmi-category");
 
     resultBox.style.display = "block";
-    bmiInfo.style.display = "block";
 
-    bmiValue.innerText = `BMI Value: ${result.bmi}`;
-    bmiCategory.innerText = `BMI Category: ${result.bmi_category}`;
+    resultBox.innerHTML = `
+  <b>${result.prediction === 1 ? "High" : "Low"} Diabetes Risk</b><br>
+  Estimated Probability: ${(result.probability * 100).toFixed(2)}%
+  <hr>
+  <b>BMI</b><br>
+  ${result.bmi} (${result.bmi_category})<br>
+  <small>${result.bmi_description}</small>
+  <hr>
+  <b>Recommended Exercises</b>
+  ${renderExercises(result.exercises)}
+`;
 
-    if (result.prediction === 1) {
-      resultBox.className = "result high";
-      resultBox.innerHTML = `
-        High Diabetes Risk<br>
-        Estimated Probability: ${(result.probability * 100).toFixed(2)}%
-      `;
-    } else {
-      resultBox.className = "result low";
-      resultBox.innerHTML = `
-        Low Diabetes Risk<br>
-        Estimated Probability: ${(result.probability * 100).toFixed(2)}%
-      `;
+    function renderExercises(exercises) {
+      if (!exercises || exercises.length === 0) {
+        return "<i>No exercise recommendations available.</i>";
+      }
+
+      return exercises
+        .slice(0, 5)
+        .map(
+          (ex) => `
+      <div style="margin-top:10px; padding:8px; border-left:4px solid #2563eb">
+        <b>${ex.name}</b><br>
+        Target: ${ex.target}<br>
+        Equipment: ${ex.equipment}
+      </div>
+    `,
+        )
+        .join("");
     }
   });

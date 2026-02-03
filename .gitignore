@@ -13,5 +13,8 @@ __pycache__/
 venv/
 .env/
 
-# Optional: keep model files if you want
+# Optional
 # *.pkl
+
+# Environment variables
+.env
