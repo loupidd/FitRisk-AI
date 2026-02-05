@@ -88,7 +88,7 @@
             class="bg-white/20 backdrop-blur-sm rounded-2xl px-5 py-4 text-center border border-white/30"
           >
             <div class="text-4xl font-bold text-white mb-1">
-              {{ formatProbability(result.probability) }}
+              {{ displayProbability }}
             </div>
             <div
               class="text-white/80 text-xs font-medium uppercase tracking-wide"
@@ -104,8 +104,8 @@
             class="bg-white/20 rounded-full h-2 overflow-hidden backdrop-blur-sm"
           >
             <div
-              class="h-full bg-white rounded-full transition-all duration-1000 ease-out shadow-lg"
-              :style="{ width: result.probability * 100 + '%' }"
+              class="h-full bg-white rounded-full transition-all duration-1000 ease-out"
+              :style="{ width: progressWidth + '%' }"
             ></div>
           </div>
           <div
@@ -232,18 +232,28 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import ExerciseList from "./ExerciseList.vue";
 
-defineProps({
+const props = defineProps({
   result: Object,
 });
 
-function formatProbability(prob) {
+const displayProbability = computed(() => {
+  const prob = props.result.probability;
   if (prob === null || prob === undefined || isNaN(prob)) {
     return "N/A";
   }
   return (prob * 100).toFixed(0) + "%";
-}
+});
+
+const progressWidth = computed(() => {
+  const prob = props.result.probability;
+  if (prob === null || prob === undefined || isNaN(prob)) {
+    return 0;
+  }
+  return Math.min(100, Math.max(0, prob * 100));
+});
 
 function getBMIColorClasses(category) {
   if (!category) return "bg-gray-100 text-gray-700";
