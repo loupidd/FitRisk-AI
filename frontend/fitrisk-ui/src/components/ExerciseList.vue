@@ -33,10 +33,10 @@
             {{ ex.name }}
           </h5>
 
-          <!-- Details grid with Equipment and Difficulty side by side -->
-          <div class="grid grid-cols-2 gap-3 mb-3">
+          <!-- Target and Difficulty in same row -->
+          <div class="grid grid-cols-2 gap-4 mb-3">
             <!-- Target -->
-            <div class="col-span-2 flex items-start gap-2">
+            <div class="flex items-start gap-2">
               <div
                 class="w-5 h-5 bg-indigo-50 rounded flex items-center justify-center shrink-0 mt-0.5"
               >
@@ -60,34 +60,7 @@
               </div>
             </div>
 
-            <!-- Equipment -->
-            <div class="flex items-start gap-2">
-              <div
-                class="w-5 h-5 bg-indigo-50 rounded flex items-center justify-center shrink-0 mt-0.5"
-              >
-                <svg
-                  class="w-3 h-3 text-indigo-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p class="text-xs text-gray-500 font-medium">Equipment</p>
-                <p class="text-sm text-gray-700 capitalize">
-                  {{ ex.equipment }}
-                </p>
-              </div>
-            </div>
-
-            <!-- Difficulty -->
+            <!-- Difficulty - Highlighted -->
             <div class="flex items-start gap-2">
               <div
                 class="w-5 h-5 bg-indigo-50 rounded flex items-center justify-center shrink-0 mt-0.5"
@@ -109,12 +82,37 @@
               <div>
                 <p class="text-xs text-gray-500 font-medium">Difficulty</p>
                 <span
-                  class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                  class="inline-flex items-center px-2.5 py-1 rounded-full text-sm font-semibold"
                   :class="getDifficultyColor(ex.difficulty)"
                 >
                   {{ capitalizeFirst(ex.difficulty || "beginner") }}
                 </span>
               </div>
+            </div>
+          </div>
+
+          <!-- Equipment below -->
+          <div class="flex items-start gap-2">
+            <div
+              class="w-5 h-5 bg-indigo-50 rounded flex items-center justify-center shrink-0 mt-0.5"
+            >
+              <svg
+                class="w-3 h-3 text-indigo-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 font-medium">Equipment</p>
+              <p class="text-sm text-gray-700 capitalize">{{ ex.equipment }}</p>
             </div>
           </div>
         </div>

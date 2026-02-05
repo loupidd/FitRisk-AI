@@ -11,39 +11,75 @@
       </h4>
 
       <div class="grid md:grid-cols-2 gap-4">
+        <!-- Height -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Height (cm)
           </label>
-          <input
-            v-model.number="form.height"
-            type="number"
-            class="input"
-            placeholder="170"
-            required
-            min="50"
-            max="250"
-            step="0.1"
-            @keypress="preventInvalidChars"
-          />
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="p-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition"
+              @click="form.height = Math.max(form.height - 0.1, 50)"
+            >
+              −
+            </button>
+            <input
+              v-model.number="form.height"
+              type="number"
+              class="input text-center flex-1"
+              placeholder="170"
+              required
+              min="50"
+              max="250"
+              step="0.1"
+              @keydown="preventInvalidChars"
+              @paste="preventPaste"
+            />
+            <button
+              type="button"
+              class="p-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition"
+              @click="form.height = Math.min(form.height + 0.1, 250)"
+            >
+              +
+            </button>
+          </div>
           <p class="text-xs text-gray-500 mt-1">Range: 50-250 cm</p>
         </div>
 
+        <!-- Weight -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Weight (kg)
           </label>
-          <input
-            v-model.number="form.weight"
-            type="number"
-            class="input"
-            placeholder="70"
-            required
-            min="20"
-            max="300"
-            step="0.1"
-            @keypress="preventInvalidChars"
-          />
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="p-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition"
+              @click="form.weight = Math.max(form.weight - 0.1, 20)"
+            >
+              −
+            </button>
+            <input
+              v-model.number="form.weight"
+              type="number"
+              class="input text-center flex-1"
+              placeholder="70"
+              required
+              min="20"
+              max="300"
+              step="0.1"
+              @keydown="preventInvalidChars"
+              @paste="preventPaste"
+            />
+            <button
+              type="button"
+              class="p-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition"
+              @click="form.weight = Math.min(form.weight + 0.1, 300)"
+            >
+              +
+            </button>
+          </div>
           <p class="text-xs text-gray-500 mt-1">Range: 20-300 kg</p>
         </div>
       </div>
@@ -74,7 +110,7 @@
           class="w-7 h-7 bg-linear-to-br from-indigo-600 to-indigo-700 text-white rounded-lg flex items-center justify-center text-xs font-bold shadow-sm"
           >2</span
         >
-        Physical Metrics
+        Demographics
       </h4>
 
       <div class="grid md:grid-cols-2 gap-4">
@@ -381,14 +417,25 @@ const isFormValid = computed(() => {
 });
 
 function preventInvalidChars(event) {
-  // Prevent +, -, and e characters
-  if (
-    event.key === "+" ||
-    event.key === "-" ||
-    event.key === "e" ||
-    event.key === "E"
-  ) {
+  // Prevent +, -, e, and E characters
+  const invalidChars = ["+", "-", "e", "E"];
+  if (invalidChars.includes(event.key)) {
     event.preventDefault();
+  }
+}
+
+function preventPaste(event) {
+  // Prevent pasting values with +, -, or e
+  event.preventDefault();
+  const pastedText = (event.clipboardData || window.clipboardData).getData(
+    "text",
+  );
+  const cleanedText = pastedText.replace(/[+\-eE]/g, "");
+
+  if (cleanedText && !isNaN(cleanedText)) {
+    const input = event.target;
+    input.value = cleanedText;
+    input.dispatchEvent(new Event("input"));
   }
 }
 
