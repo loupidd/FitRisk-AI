@@ -21,9 +21,12 @@
             class="input"
             placeholder="170"
             required
-            min="100"
+            min="50"
             max="250"
+            step="0.1"
+            @keypress="preventInvalidChars"
           />
+          <p class="text-xs text-gray-500 mt-1">Range: 50-250 cm</p>
         </div>
 
         <div>
@@ -36,9 +39,12 @@
             class="input"
             placeholder="70"
             required
-            min="30"
+            min="20"
             max="300"
+            step="0.1"
+            @keypress="preventInvalidChars"
           />
+          <p class="text-xs text-gray-500 mt-1">Range: 20-300 kg</p>
         </div>
       </div>
 
@@ -65,10 +71,10 @@
     <div class="space-y-4">
       <h4 class="font-semibold text-gray-900 flex items-center gap-2">
         <span
-          class="w-7 h-7 bg-linear-to-brrom-indigo-600 to-indigo-700 text-white rounded-lg flex items-center justify-center text-xs font-bold shadow-sm"
+          class="w-7 h-7 bg-linear-to-br from-indigo-600 to-indigo-700 text-white rounded-lg flex items-center justify-center text-xs font-bold shadow-sm"
           >2</span
         >
-        Demographics
+        Physical Metrics
       </h4>
 
       <div class="grid md:grid-cols-2 gap-4">
@@ -257,7 +263,7 @@
     <!-- Submit Button -->
     <button
       type="submit"
-      :disabled="loading"
+      :disabled="loading || !isFormValid"
       class="w-full bg-linear-to-r from-indigo-600 to-indigo-700 text-white py-4 rounded-xl font-semibold hover:from-indigo-700 hover:to-indigo-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-300"
     >
       <svg
@@ -365,7 +371,34 @@ const bmiCategory = computed(() => {
   return "Obese";
 });
 
+const isFormValid = computed(() => {
+  return (
+    form.height >= 50 &&
+    form.height <= 250 &&
+    form.weight >= 20 &&
+    form.weight <= 300
+  );
+});
+
+function preventInvalidChars(event) {
+  // Prevent +, -, and e characters
+  if (
+    event.key === "+" ||
+    event.key === "-" ||
+    event.key === "e" ||
+    event.key === "E"
+  ) {
+    event.preventDefault();
+  }
+}
+
 function onSubmit() {
+  if (!isFormValid.value) {
+    alert(
+      "Please ensure height is between 50-250 cm and weight is between 20-300 kg",
+    );
+    return;
+  }
   emit("submit", form);
 }
 </script>

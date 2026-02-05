@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50"
-  >
+  <div class="min-h-screen bg-linear-to-br from-gray-50 via-white to-indigo-50">
     <!-- Header -->
     <header
       class="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200 sticky top-0 z-50"
@@ -10,7 +8,7 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div
-              class="w-12 h-12 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200"
+              class="w-12 h-12 bg-linear-to-br from-indigo-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200"
             >
               <svg
                 class="w-7 h-7 text-white"
@@ -37,10 +35,10 @@
           <div class="relative">
             <!-- Background shape for CDC badge -->
             <div
-              class="absolute inset-0 bg-gradient-to-r from-indigo-100 to-blue-100 rounded-lg opacity-50 blur-sm"
+              class="absolute inset-0 bg-linear-to-r from-indigo-100 to-blue-100 rounded-lg opacity-50 blur-sm"
             ></div>
             <div
-              class="relative px-4 py-2 bg-gradient-to-r from-indigo-50 to-blue-50 text-indigo-700 rounded-lg text-sm font-semibold border border-indigo-200 shadow-sm"
+              class="relative px-4 py-2 bg-linear-to-r from-indigo-50 to-blue-50 text-indigo-700 rounded-lg text-sm font-semibold border border-indigo-200 shadow-sm"
             >
               CDC BRFSS 2015
             </div>
@@ -56,7 +54,7 @@
         <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
           <div class="flex items-center gap-3 mb-6">
             <div
-              class="w-10 h-10 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-xl flex items-center justify-center"
+              class="w-10 h-10 bg-linear-to-br from-indigo-100 to-indigo-200 rounded-xl flex items-center justify-center"
             >
               <svg
                 class="w-6 h-6 text-indigo-600"
@@ -120,7 +118,7 @@
 
             <div class="relative">
               <div
-                class="w-20 h-20 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm"
+                class="w-20 h-20 bg-linear-to-br from-indigo-100 to-indigo-200 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm"
               >
                 <svg
                   class="w-10 h-10 text-indigo-600"

@@ -33,10 +33,10 @@
             {{ ex.name }}
           </h5>
 
-          <!-- Details grid -->
-          <div class="grid grid-cols-2 gap-3">
+          <!-- Details grid with Equipment and Difficulty side by side -->
+          <div class="grid grid-cols-2 gap-3 mb-3">
             <!-- Target -->
-            <div class="flex items-start gap-2">
+            <div class="col-span-2 flex items-start gap-2">
               <div
                 class="w-5 h-5 bg-indigo-50 rounded flex items-center justify-center shrink-0 mt-0.5"
               >
@@ -84,6 +84,36 @@
                 <p class="text-sm text-gray-700 capitalize">
                   {{ ex.equipment }}
                 </p>
+              </div>
+            </div>
+
+            <!-- Difficulty -->
+            <div class="flex items-start gap-2">
+              <div
+                class="w-5 h-5 bg-indigo-50 rounded flex items-center justify-center shrink-0 mt-0.5"
+              >
+                <svg
+                  class="w-3 h-3 text-indigo-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 font-medium">Difficulty</p>
+                <span
+                  class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                  :class="getDifficultyColor(ex.difficulty)"
+                >
+                  {{ capitalizeFirst(ex.difficulty || "beginner") }}
+                </span>
               </div>
             </div>
           </div>
@@ -237,4 +267,25 @@
 defineProps({
   exercises: Array,
 });
+
+function capitalizeFirst(str) {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function getDifficultyColor(difficulty) {
+  if (!difficulty) return "bg-green-100 text-green-700";
+
+  const diff = difficulty.toLowerCase();
+
+  if (diff === "beginner") {
+    return "bg-green-100 text-green-700";
+  } else if (diff === "intermediate") {
+    return "bg-yellow-100 text-yellow-700";
+  } else if (diff === "advanced" || diff === "expert") {
+    return "bg-red-100 text-red-700";
+  }
+
+  return "bg-gray-100 text-gray-700";
+}
 </script>
