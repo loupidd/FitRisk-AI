@@ -6,8 +6,7 @@ import numpy as np
 from fastapi.middleware.cors import CORSMiddleware
 from exercise_service import get_exercises_by_target
 import logging
-from pathlib import Path
-
+import random
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -28,26 +27,18 @@ app.add_middleware(
 )
 
 # ===== Load artifacts =====
-BASE_DIR = Path(__file__).resolve().parent
-
-MODEL_PATH = BASE_DIR / "model_knn.pkl"
-SCALER_PATH = BASE_DIR / "scaler.pkl"
-FEATURES_PATH = BASE_DIR / "features.json"
-
 try:
-    model = joblib.load(MODEL_PATH)
-    scaler = joblib.load(SCALER_PATH)
+    model = joblib.load("model_knn.pkl")
+    scaler = joblib.load("scaler.pkl")
 
-    with open(FEATURES_PATH, "r") as f:
+    with open("features.json", "r") as f:
         FEATURES = json.load(f)
     
     logger.info(f"Model loaded: {type(model)}")
     logger.info(f"Number of features: {len(FEATURES)}")
-    logger.info(f"Artifacts loaded from: {BASE_DIR}")
 
 except Exception as e:
     raise RuntimeError(f"Failed to load model artifacts: {e}")
-
 
 # ===== Schemas =====
 class PatientInput(BaseModel):
@@ -69,43 +60,103 @@ def calculate_risk_score(bmi: float, high_bp: int, high_chol: int, smoker: int,
     """
     Calculate a risk score to determine appropriate defaults.
     Higher score = higher risk
-    MORE AGGRESSIVE scoring for BMI
     """
     score = 0
     
-    # BMI contribution (0-6 points) - INCREASED WEIGHT
+    # BMI contribution (0-6 points)
     if bmi < 18.5:
-        score += 2  # Underweight is also a risk
+        score += 2
     elif bmi >= 25 and bmi < 28:
-        score += 3  # Overweight
+        score += 3
     elif bmi >= 28 and bmi < 30:
-        score += 4  # High overweight
+        score += 4
     elif bmi >= 30 and bmi < 35:
-        score += 5  # Obese class I
+        score += 5
     elif bmi >= 35:
-        score += 6  # Obese class II+
+        score += 6
     
-    # Other risk factors (1 point each)
+    # Other risk factors
     score += high_bp
     score += high_chol
     score += smoker
     score += (1 if phys_activity == 0 else 0)
     
-    # Age factor (0-2 points)
-    if age >= 10:  # 65+ years
+    # Age factor
+    if age >= 10:
         score += 2
-    elif age >= 7:  # 50+ years
+    elif age >= 7:
         score += 1
     
-    logger.info(f"Risk score breakdown: BMI={bmi}, HighBP={high_bp}, HighChol={high_chol}, Smoker={smoker}, PhysActivity={phys_activity}, Age={age} -> Score={score}")
-    
     return score
+
+
+def get_exercise_targets(bmi: float, prediction: int, risk_score: int) -> list:
+    """
+    Get exercise targets based on BMI, diabetes prediction, and risk score.
+    Returns a list of targets to fetch exercises from.
+    """
+    targets = []
+    
+    # PRIORITY 1: Always include cardio for diabetes prevention
+    targets.append("cardiovascular system")
+    
+    # PRIORITY 2: Based on BMI category
+    if bmi < 18.5:
+        # Underweight: Focus on strength building
+        targets.extend(["upper back", "chest", "shoulders"])
+    
+    elif bmi >= 18.5 and bmi < 25:
+        # Normal: Balanced full-body
+        targets.extend(["abs", "glutes", "upper back"])
+    
+    elif bmi >= 25 and bmi < 30:
+        # Overweight: Core + lower body
+        targets.extend(["abs", "glutes", "hamstrings"])
+    
+    elif bmi >= 30 and bmi < 35:
+        # Obese Class I: Focus on core stability and lower body
+        targets.extend(["abs", "lower back", "glutes"])
+    
+    else:  # bmi >= 35
+        # Obese Class II+: Low-impact, core focused
+        targets.extend(["abs", "lower back", "glutes"])
+    
+    # PRIORITY 3: If high diabetes risk, add more cardio variety
+    if prediction == 1 or risk_score >= 7:
+        # Don't add duplicate cardiovascular system
+        pass
+    
+    logger.info(f"Selected exercise targets for BMI {bmi}, risk {risk_score}: {targets}")
+    
+    return targets
+
+
+async def fetch_varied_exercises(targets: list, total_count: int = 5) -> list:
+    """
+    Fetch exercises from multiple targets and mix them.
+    """
+    all_exercises = []
+    exercises_per_target = max(2, total_count // len(targets))
+    
+    for target in targets:
+        try:
+            exercises = await get_exercises_by_target(target, limit=exercises_per_target)
+            logger.info(f"Fetched {len(exercises)} exercises for target: {target}")
+            all_exercises.extend(exercises)
+        except Exception as e:
+            logger.error(f"Failed to fetch exercises for {target}: {e}")
+            continue
+    
+    # Shuffle to mix different targets
+    random.shuffle(all_exercises)
+    
+    # Return exactly total_count exercises
+    return all_exercises[:total_count]
 
 
 def adapt_ui_input_to_brfss(raw: dict) -> dict:
     """
     Adapter layer with INTELLIGENT defaults based on risk profile.
-    MORE AGGRESSIVE thresholds
     """
 
     # ---- BMI handling ----
@@ -132,38 +183,37 @@ def adapt_ui_input_to_brfss(raw: dict) -> dict:
     
     logger.info(f"Calculated risk score: {risk_score}/11 (BMI: {bmi})")
     
-    # MORE AGGRESSIVE thresholds
-    # GenHlth: 1=Excellent, 2=Very Good, 3=Good, 4=Fair, 5=Poor
-    if risk_score >= 7:  # Very high risk
-        gen_hlth = 5  # Poor health
+    # Intelligent defaults based on risk score
+    if risk_score >= 7:
+        gen_hlth = 5
         fruits = 0
         veggies = 0
         stroke_risk = 1 if bmi >= 35 else 0
         heart_risk = 1 if (high_bp or high_chol or bmi >= 35) else 0
         diff_walk = 1 if bmi >= 32 else 0
-    elif risk_score >= 5:  # High risk (BMI 30+ falls here)
-        gen_hlth = 4  # Fair health
+    elif risk_score >= 5:
+        gen_hlth = 4
         fruits = 0
         veggies = 1
         stroke_risk = 0
         heart_risk = 1 if (high_bp or high_chol) else 0
         diff_walk = 1 if bmi >= 30 else 0
-    elif risk_score >= 3:  # Moderate risk
-        gen_hlth = 3  # Good health
+    elif risk_score >= 3:
+        gen_hlth = 3
         fruits = 1
         veggies = 1
         stroke_risk = 0
         heart_risk = 0
         diff_walk = 0
-    else:  # Low risk
-        gen_hlth = 2  # Very good health
+    else:
+        gen_hlth = 2
         fruits = 1
         veggies = 1
         stroke_risk = 0
         heart_risk = 0
         diff_walk = 0
     
-    logger.info(f"Applied defaults: GenHlth={gen_hlth}, Fruits={fruits}, Veggies={veggies}, DiffWalk={diff_walk}, HeartDisease={heart_risk}")
+    logger.info(f"Applied defaults: GenHlth={gen_hlth}, DiffWalk={diff_walk}, HeartDisease={heart_risk}")
 
     return {
         "HighBP": high_bp,
@@ -190,7 +240,6 @@ def adapt_ui_input_to_brfss(raw: dict) -> dict:
     }
 
 
-# ===== BMI CATEGORY (WHO) =====
 def bmi_category(bmi: float) -> str:
     if bmi < 18.5:
         return "Underweight"
@@ -213,7 +262,6 @@ def bmi_description(bmi: float) -> str:
         return "Your body weight is in the obese range. Lifestyle changes are strongly recommended."
 
 
-# ===== Health Check =====
 @app.get("/")
 def health_check():
     return {
@@ -223,14 +271,21 @@ def health_check():
     }
 
 
-# ===== Prediction Endpoint =====
 @app.post("/predict", response_model=PredictionResponse)
 async def predict(input_data: PatientInput):
     try:
         # ---- validation ----
         brfss_data = adapt_ui_input_to_brfss(input_data.data)
         
-        logger.info(f"Final features for model: GenHlth={brfss_data['GenHlth']}, BMI={brfss_data['BMI']}, DiffWalk={brfss_data['DiffWalk']}, HeartDisease={brfss_data['HeartDiseaseorAttack']}")
+        bmi_value = float(brfss_data["BMI"])
+        risk_score = calculate_risk_score(
+            bmi_value,
+            brfss_data["HighBP"],
+            brfss_data["HighChol"],
+            brfss_data["Smoker"],
+            brfss_data["PhysActivity"],
+            brfss_data["Age"]
+        )
 
         missing = [f for f in FEATURES if f not in brfss_data]
         if missing:
@@ -249,20 +304,16 @@ async def predict(input_data: PatientInput):
         
         logger.info(f"MODEL OUTPUT: prediction={prediction}, diabetes_prob={proba:.4f} ({proba*100:.2f}%)")
 
-        # ---- BMI logic ----
-        bmi_value = float(brfss_data["BMI"])
         bmi_cat = bmi_category(bmi_value)
-
         risk_label = "Diabetes Risk" if prediction == 1 else "No Diabetes"
 
-        # ---- Exercise target decision ----
-        target = "cardiovascular system"
-
-        # ---- ExerciseDB call with error handling ----
+        # ---- Get varied exercise recommendations ----
+        exercise_targets = get_exercise_targets(bmi_value, prediction, risk_score)
         exercises = []
+        
         try:
-            exercises = await get_exercises_by_target(target)
-            logger.info(f"Retrieved {len(exercises)} exercises")
+            exercises = await fetch_varied_exercises(exercise_targets, total_count=5)
+            logger.info(f"Retrieved {len(exercises)} total exercises from {len(exercise_targets)} targets")
         except Exception as e:
             logger.error(f"Failed to fetch exercises: {e}")
             exercises = []

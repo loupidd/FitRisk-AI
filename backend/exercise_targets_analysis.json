@@ -1,0 +1,145 @@
+{
+  "all_targets": [
+    "abductors",
+    "abs",
+    "adductors",
+    "biceps",
+    "calves",
+    "cardiovascular system",
+    "delts",
+    "forearms",
+    "glutes",
+    "hamstrings",
+    "lats",
+    "levator scapulae",
+    "pectorals",
+    "quads",
+    "serratus anterior",
+    "spine",
+    "traps",
+    "triceps",
+    "upper back"
+  ],
+  "tested_results": [
+    {
+      "target": "cardiovascular system",
+      "count": 10,
+      "has_data": true,
+      "sample_exercises": [
+        "jack burpee",
+        "mountain climber",
+        "run (equipment)"
+      ]
+    },
+    {
+      "target": "abs",
+      "count": 10,
+      "has_data": true,
+      "sample_exercises": [
+        "3/4 sit-up",
+        "45\u00b0 side bend",
+        "air bike"
+      ]
+    },
+    {
+      "target": "glutes",
+      "count": 10,
+      "has_data": true,
+      "sample_exercises": [
+        "barbell clean-grip front squat",
+        "barbell deadlift",
+        "barbell front chest squat"
+      ]
+    },
+    {
+      "target": "hamstrings",
+      "count": 10,
+      "has_data": true,
+      "sample_exercises": [
+        "assisted prone hamstring",
+        "barbell good morning",
+        "barbell straight leg deadlift"
+      ]
+    },
+    {
+      "target": "calves",
+      "count": 10,
+      "has_data": true,
+      "sample_exercises": [
+        "barbell seated calf raise",
+        "barbell standing leg calf raise",
+        "barbell standing rocking leg calf raise"
+      ]
+    },
+    {
+      "target": "upper back",
+      "count": 10,
+      "has_data": true,
+      "sample_exercises": [
+        "barbell bent over row",
+        "barbell incline row",
+        "barbell one arm bent over row"
+      ]
+    },
+    {
+      "target": "triceps",
+      "count": 10,
+      "has_data": true,
+      "sample_exercises": [
+        "assisted standing triceps extension (with towel)",
+        "assisted triceps dip (kneeling)",
+        "barbell close-grip bench press"
+      ]
+    },
+    {
+      "target": "biceps",
+      "count": 10,
+      "has_data": true,
+      "sample_exercises": [
+        "barbell alternate biceps curl",
+        "barbell curl",
+        "barbell drag curl"
+      ]
+    },
+    {
+      "target": "forearms",
+      "count": 10,
+      "has_data": true,
+      "sample_exercises": [
+        "barbell reverse wrist curl v. 2",
+        "barbell reverse wrist curl",
+        "barbell standing back wrist curl"
+      ]
+    },
+    {
+      "target": "adductors",
+      "count": 6,
+      "has_data": true,
+      "sample_exercises": [
+        "cable hip adduction",
+        "lever seated hip adduction",
+        "butterfly yoga pose"
+      ]
+    },
+    {
+      "target": "abductors",
+      "count": 5,
+      "has_data": true,
+      "sample_exercises": [
+        "lever seated hip abduction",
+        "side hip abduction",
+        "straight leg outer hip abductor"
+      ]
+    },
+    {
+      "target": "lats",
+      "count": 10,
+      "has_data": true,
+      "sample_exercises": [
+        "alternate lateral pulldown",
+        "assisted parallel close grip pull-up",
+        "assisted pull-up"
+      ]
+    }
+  ]
+}
