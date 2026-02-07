@@ -7,8 +7,8 @@
       :class="[
         'p-8 relative overflow-hidden',
         result.prediction === 1
-          ? 'bg-linear-to-br from-red-500 to-red-600'
-          : 'bg-linear-to-br from-indigo-600 to-indigo-700',
+          ? 'bg-gradient-to-br from-red-500 to-red-600'
+          : 'bg-gradient-to-br from-indigo-600 to-indigo-700',
       ]"
     >
       <!-- Background pattern -->
@@ -123,7 +123,7 @@
     <div class="p-8 space-y-6">
       <!-- BMI Section -->
       <div
-        class="bg-linear-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200"
+        class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200"
       >
         <div class="flex items-center gap-3 mb-4">
           <div
@@ -163,27 +163,25 @@
           {{ result.bmi_description }}
         </p>
 
-        <!-- BMI Scale -->
+        <!-- BMI Scale - Updated: Removed Orange, Red starts at 30 -->
         <div class="space-y-2">
           <div class="flex gap-1 h-3 rounded-full overflow-hidden">
             <div class="flex-1 bg-blue-400"></div>
             <div class="flex-1 bg-green-400"></div>
             <div class="flex-1 bg-yellow-400"></div>
-            <div class="flex-1 bg-orange-400"></div>
             <div class="flex-1 bg-red-400"></div>
           </div>
           <div class="flex justify-between text-xs text-gray-500 font-medium">
             <span>&lt;18.5</span>
             <span>18.5-25</span>
             <span>25-30</span>
-            <span>30-35</span>
-            <span>35+</span>
+            <span>30+</span>
           </div>
         </div>
       </div>
 
       <div
-        class="h-px bg-linear-to-r from-transparent via-gray-300 to-transparent"
+        class="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"
       ></div>
 
       <!-- Exercise Recommendations -->
@@ -191,10 +189,10 @@
 
       <!-- Health Disclaimer -->
       <div
-        class="bg-linear-to-br from-amber-50 to-yellow-50 border border-amber-200 rounded-xl p-5"
+        class="bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200 rounded-xl p-5"
       >
         <div class="flex gap-3">
-          <div class="shrink-0">
+          <div class="flex-shrink-0">
             <div
               class="w-10 h-10 bg-white rounded-lg shadow-sm flex items-center justify-center"
             >
