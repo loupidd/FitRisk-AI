@@ -4,7 +4,7 @@
     <div class="space-y-4">
       <h4 class="font-semibold text-gray-900 flex items-center gap-2">
         <span
-          class="w-7 h-7 bg-gradient-to-br from-indigo-600 to-indigo-700 text-white rounded-lg flex items-center justify-center text-xs font-bold shadow-sm"
+          class="w-7 h-7 bg-linear-to-br from-indigo-600 to-indigo-700 text-white rounded-lg flex items-center justify-center text-xs font-bold shadow-sm"
           >1</span
         >
         Physical Metrics
@@ -25,19 +25,16 @@
               −
             </button>
             <input
-              v-model.number="form.height"
+              v-model="form.height"
               type="number"
               class="input text-center flex-1"
               placeholder="170"
-              required
               min="50"
               max="250"
               step="0.1"
-              @input="validateHeight"
               @blur="validateHeight"
-              @keydown="preventInvalidChars"
-              @paste="preventPaste"
             />
+
             <button
               type="button"
               class="w-10 h-10 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition-all flex items-center justify-center font-semibold text-lg hover:shadow-md"
@@ -66,19 +63,16 @@
               −
             </button>
             <input
-              v-model.number="form.weight"
+              v-model="form.weight"
               type="number"
               class="input text-center flex-1"
               placeholder="70"
-              required
               min="20"
               max="300"
               step="0.1"
-              @input="validateWeight"
               @blur="validateWeight"
-              @keydown="preventInvalidChars"
-              @paste="preventPaste"
             />
+
             <button
               type="button"
               class="w-10 h-10 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition-all flex items-center justify-center font-semibold text-lg hover:shadow-md"
@@ -97,7 +91,7 @@
       <!-- BMI Preview -->
       <div
         v-if="form.height && form.weight && !heightError && !weightError"
-        class="p-4 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl border border-indigo-200 shadow-sm"
+        class="p-4 bg-linear-to-br from-indigo-50 to-blue-50 rounded-xl border border-indigo-200 shadow-sm"
       >
         <div class="flex items-center justify-between">
           <span class="text-sm font-semibold text-indigo-900"
@@ -117,7 +111,7 @@
     <div class="space-y-4">
       <h4 class="font-semibold text-gray-900 flex items-center gap-2">
         <span
-          class="w-7 h-7 bg-gradient-to-br from-indigo-600 to-indigo-700 text-white rounded-lg flex items-center justify-center text-xs font-bold shadow-sm"
+          class="w-7 h-7 bg-linear-to-br from-indigo-600 to-indigo-700 text-white rounded-lg flex items-center justify-center text-xs font-bold shadow-sm"
           >2</span
         >
         Demographics
@@ -156,7 +150,7 @@
     <div class="space-y-4">
       <h4 class="font-semibold text-gray-900 flex items-center gap-2">
         <span
-          class="w-7 h-7 bg-gradient-to-br from-indigo-600 to-indigo-700 text-white rounded-lg flex items-center justify-center text-xs font-bold shadow-sm"
+          class="w-7 h-7 bg-linear-to-br from-indigo-600 to-indigo-700 text-white rounded-lg flex items-center justify-center text-xs font-bold shadow-sm"
           >3</span
         >
         Health Conditions
@@ -174,7 +168,7 @@
               :class="[
                 'py-3 px-4 rounded-xl font-medium transition-all duration-200',
                 form.HighBP === 0
-                  ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
+                  ? 'bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
                   : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200',
               ]"
             >
@@ -186,7 +180,7 @@
               :class="[
                 'py-3 px-4 rounded-xl font-medium transition-all duration-200',
                 form.HighBP === 1
-                  ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
+                  ? 'bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
                   : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200',
               ]"
             >
@@ -206,7 +200,7 @@
               :class="[
                 'py-3 px-4 rounded-xl font-medium transition-all duration-200',
                 form.HighChol === 0
-                  ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
+                  ? 'bg-linear-to-brrom-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
                   : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200',
               ]"
             >
@@ -218,7 +212,7 @@
               :class="[
                 'py-3 px-4 rounded-xl font-medium transition-all duration-200',
                 form.HighChol === 1
-                  ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
+                  ? 'bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
                   : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200',
               ]"
             >
@@ -233,7 +227,7 @@
     <div class="space-y-4">
       <h4 class="font-semibold text-gray-900 flex items-center gap-2">
         <span
-          class="w-7 h-7 bg-gradient-to-br from-indigo-600 to-indigo-700 text-white rounded-lg flex items-center justify-center text-xs font-bold shadow-sm"
+          class="w-7 h-7 bg-linear-to-br from-indigo-600 to-indigo-700 text-white rounded-lg flex items-center justify-center text-xs font-bold shadow-sm"
           >4</span
         >
         Lifestyle
@@ -251,7 +245,7 @@
               :class="[
                 'py-3 px-4 rounded-xl font-medium transition-all duration-200',
                 form.Smoker === 0
-                  ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
+                  ? 'bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
                   : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200',
               ]"
             >
@@ -263,7 +257,7 @@
               :class="[
                 'py-3 px-4 rounded-xl font-medium transition-all duration-200',
                 form.Smoker === 1
-                  ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
+                  ? 'bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
                   : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200',
               ]"
             >
@@ -283,7 +277,7 @@
               :class="[
                 'py-3 px-4 rounded-xl font-medium transition-all duration-200',
                 form.PhysActivity === 0
-                  ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
+                  ? 'bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
                   : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200',
               ]"
             >
@@ -295,7 +289,7 @@
               :class="[
                 'py-3 px-4 rounded-xl font-medium transition-all duration-200',
                 form.PhysActivity === 1
-                  ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
+                  ? 'bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
                   : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200',
               ]"
             >
@@ -310,7 +304,7 @@
     <button
       type="submit"
       :disabled="loading || !isFormValid"
-      class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 text-white py-4 rounded-xl font-semibold hover:from-indigo-700 hover:to-indigo-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-300"
+      class="w-full bg-linear-to-r from-indigo-600 to-indigo-700 text-white py-4 rounded-xl font-semibold hover:from-indigo-700 hover:to-indigo-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-300"
     >
       <svg
         v-if="!loading"
@@ -422,94 +416,88 @@ const bmiCategory = computed(() => {
 });
 
 const isFormValid = computed(() => {
+  const h = Number(form.height);
+  const w = Number(form.weight);
+
   return (
-    form.height >= 50 &&
-    form.height <= 250 &&
-    form.weight >= 20 &&
-    form.weight <= 300 &&
+    !isNaN(h) &&
+    !isNaN(w) &&
+    h >= 50 &&
+    h <= 250 &&
+    w >= 20 &&
+    w <= 300 &&
     !heightError.value &&
     !weightError.value
   );
 });
 
 // Spinner button functions
-function decrementHeight() {
-  const currentHeight = form.height || 50;
-  form.height = Math.max(currentHeight - 1, 50);
-  validateHeight();
-}
-
 function incrementHeight() {
-  const currentHeight = form.height || 50;
-  form.height = Math.min(currentHeight + 1, 250);
+  const current = Number(form.height) || 0;
+  form.height = Math.min(current + 1, 250);
   validateHeight();
 }
 
-function decrementWeight() {
-  const currentWeight = form.weight || 20;
-  form.weight = Math.max(currentWeight - 1, 20);
-  validateWeight();
+function decrementHeight() {
+  const current = Number(form.height) || 0;
+  form.height = Math.max(current - 1, 0);
+  validateHeight();
 }
 
 function incrementWeight() {
-  const currentWeight = form.weight || 20;
-  form.weight = Math.min(currentWeight + 1, 300);
+  const current = Number(form.weight) || 0;
+  form.weight = Math.min(current + 1, 300);
+  validateWeight();
+}
+
+function decrementWeight() {
+  const current = Number(form.weight) || 0;
+  form.weight = Math.max(current - 1, 0);
   validateWeight();
 }
 
 // Validation functions
 function validateHeight() {
-  if (!form.height) {
+  if (form.height === null || form.height === "") {
     heightError.value = "";
     return;
   }
 
-  if (form.height < 50) {
+  const value = Number(form.height);
+
+  if (isNaN(value)) {
+    heightError.value = "Invalid height";
+    return;
+  }
+
+  if (value < 50) {
     heightError.value = "Height must be at least 50 cm";
-    form.height = 50;
-  } else if (form.height > 250) {
+  } else if (value > 250) {
     heightError.value = "Height cannot exceed 250 cm";
-    form.height = 250;
   } else {
     heightError.value = "";
   }
 }
 
 function validateWeight() {
-  if (!form.weight) {
+  if (form.weight === null || form.weight === "") {
     weightError.value = "";
     return;
   }
 
-  if (form.weight < 20) {
+  const value = Number(form.weight);
+
+  if (isNaN(value)) {
+    weightError.value = "Invalid weight";
+    return;
+  }
+
+  if (value < 20) {
     weightError.value = "Weight must be at least 20 kg";
-    form.weight = 20;
-  } else if (form.weight > 300) {
+  } else if (value > 300) {
     weightError.value = "Weight cannot exceed 300 kg";
-    form.weight = 300;
   } else {
     weightError.value = "";
-  }
-}
-
-function preventInvalidChars(event) {
-  const invalidChars = ["+", "-", "e", "E"];
-  if (invalidChars.includes(event.key)) {
-    event.preventDefault();
-  }
-}
-
-function preventPaste(event) {
-  event.preventDefault();
-  const pastedText = (event.clipboardData || window.clipboardData).getData(
-    "text",
-  );
-  const cleanedText = pastedText.replace(/[+\-eE]/g, "");
-
-  if (cleanedText && !isNaN(cleanedText)) {
-    const input = event.target;
-    input.value = cleanedText;
-    input.dispatchEvent(new Event("input"));
   }
 }
 
@@ -518,11 +506,14 @@ function onSubmit() {
   validateWeight();
 
   if (!isFormValid.value) {
-    alert(
-      "Please ensure height is between 50-250 cm and weight is between 20-300 kg",
-    );
+    alert("Please enter valid height (50–250 cm) and weight (20–300 kg)");
     return;
   }
-  emit("submit", form);
+
+  emit("submit", {
+    ...form,
+    height: Number(form.height),
+    weight: Number(form.weight),
+  });
 }
 </script>
