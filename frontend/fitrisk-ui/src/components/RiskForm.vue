@@ -200,7 +200,7 @@
               :class="[
                 'py-3 px-4 rounded-xl font-medium transition-all duration-200',
                 form.HighChol === 0
-                  ? 'bg-linear-to-brrom-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
+                  ? 'bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-200'
                   : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200',
               ]"
             >
